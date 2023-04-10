@@ -138,11 +138,10 @@ class ConversationContext:
                     raw_bytes = io.BytesIO(await image.get_bytes())
                     raw_image = Image.open(raw_bytes)
                     images = await self.openai_api.image_variation(src_img=raw_image)
+                elif isinstance(self.adapter, BingAdapter):
+                    images = await self.adapter.image_creation(prompt)
                 else:
-                    if isinstance(self.adapter, BingAdapter):
-                        images = await self.adapter.image_creation(prompt)
-                    else:
-                        images = await self.openai_api.image_creation(prompt)
+                    images = await self.openai_api.image_creation(prompt)
                 if not isinstance(images, list):
                     images = [images]
                 logger.debug("[Image] Downloaded")
